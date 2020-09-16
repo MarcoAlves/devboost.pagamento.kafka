@@ -26,6 +26,8 @@ namespace devboost.dronedelivery.Services
 
             return byteContent;
         }
+
+        //public static string Serialize
     }
 
 }

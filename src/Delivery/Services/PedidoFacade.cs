@@ -3,7 +3,10 @@ using devboost.dronedelivery.domain.Entities;
 using devboost.dronedelivery.domain.Enums;
 using devboost.dronedelivery.domain.Interfaces;
 using devboost.dronedelivery.domain.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace devboost.dronedelivery.felipe.Facade
@@ -92,6 +95,31 @@ namespace devboost.dronedelivery.felipe.Facade
             {
                 throw new Exception("Pedido inválido");
             }
+        }
+
+        public async Task<IEnumerable<Pedido>> GetAll()
+        {
+            var result = await _pedidoRepository.GetAllAsync();
+
+            return result.ToList();
+        }
+
+        public async Task<Pedido> AtualizarStatusPedido(Pagamento pagamento)
+        {
+
+            var pedido = await _pedidoRepository.ObterPedidoPorPagamentoId(pagamento.Id);
+
+            if (pagamento.StatusPagamento == core.domain.Enums.EStatusPagamento.APROVADO)
+                pedido.Situacao = (int)StatusPedido.AGUARDANDO_ENVIO;
+
+            else if (pagamento.StatusPagamento == core.domain.Enums.EStatusPagamento.RECUSADO)
+                pedido.Situacao = (int)StatusPedido.RECUSADO;
+
+            _pedidoRepository.SetState(pedido, EntityState.Modified);
+
+            return await Task.FromResult(pedido);
+
+
         }
     }
 }

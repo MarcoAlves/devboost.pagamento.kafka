@@ -150,5 +150,39 @@ namespace devboost.dronedelivery.pagamento.Api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("AtualizarPagamento")]
+        public async Task<IActionResult> AtualizarPagamento(Pagamento pagamento)
+        {
+
+            if (pagamento.Id == 0 || pagamento == null)
+            {
+                return BadRequest();
+            }
+
+            pagamento.StatusPagamento = core.domain.Enums.EStatusPagamento.APROVADO;
+            _pagamentoRepository.SetState(pagamento, EntityState.Modified);
+
+            try
+            {
+                await _pagamentoRepository.SaveAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _pagamentoRepository.PagamentoExists(pagamento.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+
+        }
+
+
     }
 }

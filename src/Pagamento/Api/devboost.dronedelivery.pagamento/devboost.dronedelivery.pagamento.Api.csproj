@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Delivery\Services\devboost.dronedelivery.Services.csproj" />
+    <ProjectReference Include="..\..\..\devboost.dronedelivery.sb.service\devboost.dronedelivery.sb.service.csproj" />
     <ProjectReference Include="..\..\..\Infra\Data\devboost.dronedelivery.Infra.Data.csproj" />
     <ProjectReference Include="..\..\Domain\devboost.dronedelivery.pagamento.domain\devboost.dronedelivery.pagamento.domain.csproj" />
     <ProjectReference Include="..\..\Services\devboost.microservices.pagamento.services\devboost.dronedelivery.pagamento.services.csproj" />

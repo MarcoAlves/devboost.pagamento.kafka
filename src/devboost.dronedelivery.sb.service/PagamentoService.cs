@@ -9,28 +9,33 @@ using System.Threading.Tasks;
 
 namespace devboost.dronedelivery.sb.service
 {
-    public class PedidosService : HttpServiceBase, IPedidosService
+    public class PagamentoService : HttpServiceBase, IPagamentoService
     {
+
         private const string MediaType = "application/json";
-        private const string PedidoUri = "api/Pedidos";
+        private const string PagamentoUri = "api/Pedidos/atualizar-pedido";
         private const string AuthorizationType = "Bearer";
 
-        public PedidosService(IConfiguration configuration) : base(configuration)
+        public PagamentoService(IConfiguration configuration) : base(configuration)
         {
+
+
         }
 
-        public async Task ProcessPedidoAsync(string token, string pedido)
+        public async Task ProcessPagamentoAsync(string token, string pagamento)
         {
             using var httpClient = new HttpClient
             {
                 BaseAddress = new Uri(_urlPedidos)
             };
+
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthorizationType, token);
-            var request = new StringContent(pedido, Encoding.UTF8, MediaType);
-            var response = await httpClient.PostAsync(PedidoUri, request);
+            var request = new StringContent(pagamento, Encoding.UTF8, MediaType);
+            var response = await httpClient.PostAsync(PagamentoUri, request);
+
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Error to post pedido");
+                throw new Exception("Error to post pagamento");
             }
         }
 

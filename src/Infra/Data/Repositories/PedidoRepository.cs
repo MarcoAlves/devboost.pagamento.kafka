@@ -14,6 +14,11 @@ namespace devboost.dronedelivery.felipe.EF.Repositories
         {
         }
 
+        public async Task<Pedido> ObterPedidoPorPagamentoId(int pagamentoId)
+        {
+            return await Context.Pedido.Where(_ => _.PagamentoId == pagamentoId).FirstOrDefaultAsync();
+        }
+
         public List<Pedido> ObterPedidos(int situacao)
         {
             var pedidos = from p in Context.Pedido.ToList()
@@ -32,6 +37,7 @@ namespace devboost.dronedelivery.felipe.EF.Repositories
         {
             Context.Entry(pedido).State = entityState;
         }
+
 
     }
 }

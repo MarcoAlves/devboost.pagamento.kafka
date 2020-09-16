@@ -22,16 +22,16 @@ namespace devboost.dronedelivery.sb.service
         {
             var user = new LoginDTO()
             {
-                UserName = "admin_drone",
+                UserId = "admin_drone",
                 Password = "AdminAPIDrone01!"
             };
 
-            var request = new StringContent(JsonConvert.SerializeObject(user));
+            var request = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
             using var client = new HttpClient();
             client.BaseAddress = new Uri(_urlPedidos);
             var tokenJson = await client.PostAsync("api/login", request);
-            var token = JSONHelper.DeserializeJObject<Token>(tokenJson) as Token;
+            var token = JSONHelper.DeserializeJsonToObject<Token>(await tokenJson.Content.ReadAsStringAsync());
             return token.AccessToken;
         }
 

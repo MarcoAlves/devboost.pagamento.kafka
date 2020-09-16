@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Infra\ServiceBus\domain\devboost.dronedelivery.sb.domain\devboost.dronedelivery.sb.domain.csproj" />
     <ProjectReference Include="..\..\Domain\devboost.dronedelivery.pagamento.domain\devboost.dronedelivery.pagamento.domain.csproj" />
     <ProjectReference Include="..\..\Infra\devboost.dronedelivery.pagamento.EF\devboost.dronedelivery.pagamento.EF.csproj" />
   </ItemGroup>

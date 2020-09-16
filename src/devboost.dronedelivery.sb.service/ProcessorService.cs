@@ -12,11 +12,14 @@ namespace devboost.dronedelivery.sb.service
         private readonly IConsumer _consumer;
         private readonly ILoginProvider _loginProvider;
         private readonly IPedidosService _pedidoService;
-        public ProcessorService(IConsumer consumer, ILoginProvider loginProvider, IPedidosService pedidosService)
+        private readonly IPagamentoService _pagamentoService;
+
+        public ProcessorService(IConsumer consumer, ILoginProvider loginProvider, IPedidosService pedidosService, IPagamentoService pagamentoService)
         {
             _consumer = consumer;
             _loginProvider = loginProvider;
             _pedidoService = pedidosService;
+            _pagamentoService = pagamentoService;
 
         }
         public async Task ProcessorQueueAsync()
@@ -28,6 +31,15 @@ namespace devboost.dronedelivery.sb.service
             {
                 await _pedidoService.ProcessPedidoAsync(token, message);
             }
+
+            using var cancellationTokenPagamento = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            var messagesPagamento = await _consumer.ExecuteAsync(cancellationTokenPagamento.Token, "pagamento-status");
+            var tokenPagamento = await _loginProvider.GetTokenAsync();
+            foreach (var message in messagesPagamento)
+            {
+                await _pagamentoService.ProcessPagamentoAsync(tokenPagamento, message);
+            }
+
         }
     }
 }

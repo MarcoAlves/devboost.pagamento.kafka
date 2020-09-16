@@ -176,6 +176,19 @@
                
             </remarks>
         </member>
+        <member name="M:devboost.dronedelivery.Api.Controllers.PedidosController.GetAll">
+            <summary>
+            Obter todos os pedidos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:devboost.dronedelivery.Api.Controllers.PedidosController.AtualizarPedido(devboost.dronedelivery.core.domain.Entities.Pagamento)">
+            <summary>
+            Atualizar pedido de acordo com o pagamento
+            </summary>
+            <param name="pagamento"></param>
+            <returns></returns>
+        </member>
         <member name="T:devboost.dronedelivery.Extensions.ServiceCollectionExtensions">
             <summary>
             Service Collection extensions

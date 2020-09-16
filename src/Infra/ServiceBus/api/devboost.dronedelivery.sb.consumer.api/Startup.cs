@@ -36,6 +36,8 @@ namespace devboost.dronedelivery.sb.consumer.api
             services.AddSingleton<IProcessorQueue, ProcessorService>();
             services.AddSingleton<ILoginProvider, LoginProvider>();
             services.AddSingleton<IPedidosService, PedidosService>();
+            services.AddSingleton<IPagamentoService, PagamentoService>();
+            services.AddSingleton<IProducerService, ProducerService>();
             services.AddHangfire(config => config.UseMemoryStorage());
 
         }
@@ -62,10 +64,16 @@ namespace devboost.dronedelivery.sb.consumer.api
             {
                 endpoints.MapControllers();
             });
-            var queue = app.ApplicationServices.GetService<IBackgroundJobClient>();
-            var processorQueue = app.ApplicationServices.GetService<IProcessorQueue>();
+            //var queue = app.ApplicationServices.GetService<IBackgroundJobClient>();
+            //var processorQueue = app.ApplicationServices.GetService<IProcessorQueue>();
 
-            queue.Schedule(() => processorQueue.ProcessorQueueAsync(), TimeSpan.FromSeconds(10));
+            var processorQueue = app.ApplicationServices.GetService<IProcessorQueue>();
+            var recurringJobManager = app.ApplicationServices.GetService<IRecurringJobManager>();
+            
+            recurringJobManager.AddOrUpdate("pedidos", () => processorQueue.ProcessorQueueAsync(), "*/5 * * * * *");
+
+
+            //queue.Schedule(() => processorQueue.ProcessorQueueAsync(), TimeSpan.FromSeconds(10));
         }
     }
 }

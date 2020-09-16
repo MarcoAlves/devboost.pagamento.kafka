@@ -4,7 +4,10 @@ using devboost.dronedelivery.core.domain.Enums;
 using devboost.dronedelivery.pagamento.domain.Interfaces;
 using devboost.dronedelivery.pagamento.EF.Integration.Interfaces;
 using devboost.dronedelivery.pagamento.EF.Repositories.Interfaces;
+using devboost.dronedelivery.sb.domain.Interfaces;
+using devboost.dronedelivery.Services;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,11 +18,13 @@ namespace devboost.dronedelivery.pagamento.services
     {
         private readonly IPagamentoRepository _pagamentoRepository;
         private readonly IPagamentoIntegration _pagamentoIntegration;
+        private readonly IProducerService _producerService;
 
-        public PagamentoFacade(IPagamentoRepository pagamentoRepository, IPagamentoIntegration pagamentoIntegration)
+        public PagamentoFacade(IPagamentoRepository pagamentoRepository, IPagamentoIntegration pagamentoIntegration, IProducerService producerService)
         {
             _pagamentoRepository = pagamentoRepository;
             _pagamentoIntegration = pagamentoIntegration;
+            _producerService = producerService;
         }
 
         public async Task<Pagamento> CriarPagamento(PagamentoCreateDto pagamento)
@@ -33,7 +38,12 @@ namespace devboost.dronedelivery.pagamento.services
                 Descricao = pagamento.Descricao
             };
 
-            await _pagamentoRepository.AddAsync(newPagamento);
+            var result = await _pagamentoRepository.AddAsync(newPagamento);
+            if(result != null)
+            {
+                var pagamentoMessage = JsonConvert.SerializeObject(result);
+                var resultMessage = await _producerService.SendMessage("pagamento-status", pagamentoMessage);
+            }
 
             return newPagamento;
         }
