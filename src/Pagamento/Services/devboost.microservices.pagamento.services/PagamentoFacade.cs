@@ -33,7 +33,7 @@ namespace devboost.dronedelivery.pagamento.services
             {
                 DadosPagamentos = pagamento.DadosPagamentos,
                 TipoPagamento = pagamento.TipoPagamento,
-                StatusPagamento = EStatusPagamento.EM_ANALISE,
+                StatusPagamento = RandomPagamento(),
                 DataCriacao = DateTime.Now,
                 Descricao = pagamento.Descricao
             };
